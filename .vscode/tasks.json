@@ -1,0 +1,76 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "windows": {
+                "command": "scons",
+            },
+            "osx": {
+                "command": "make"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "label": "Install",
+            "type": "shell",
+            "osx": {
+                "command": "make install"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [ "Build" ]
+
+        },
+        {
+            "label": "Build+Run",
+            "type": "shell",
+            "osx": {
+                "command": "${workspaceFolder}/build/bin/rebellion_main 2>&1 && echo 'OK' || echo 'ERROR'"
+            },
+            "windows": {
+                "command": "${workspaceFolder}/build/rebellion/ 2>&1 && echo 'OK' || echo 'ERROR'"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "dependsOn": [ "Build" ]
+        },
+        {
+            "label": "Run",
+            "type": "shell",
+            "osx": {
+                "command": "${workspaceFolder}/build/bin/rebellion_main 2>&1 && echo 'OK' || echo 'ERROR'"
+            },
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
