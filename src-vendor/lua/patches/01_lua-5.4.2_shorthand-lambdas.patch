@@ -1,0 +1,74 @@
+--- src/lparser.c.orig	2021-03-10 20:44:20.196980502 +0000
++++ src/lparser.c	2021-03-11 06:40:23.962917172 +0000
+@@ -944,13 +944,13 @@
+ }
+ 
+ 
+-static void parlist (LexState *ls) {
++static void parlist_ext (LexState *ls, int end_token) {
+   /* parlist -> [ {NAME ','} (NAME | '...') ] */
+   FuncState *fs = ls->fs;
+   Proto *f = fs->f;
+   int nparams = 0;
+   int isvararg = 0;
+-  if (ls->t.token != ')') {  /* is 'parlist' not empty? */
++  if (ls->t.token != end_token) {  /* is 'parlist' not empty? */
+     do {
+       switch (ls->t.token) {
+         case TK_NAME: {
+@@ -973,6 +973,9 @@
+     setvararg(fs, f->numparams);  /* declared vararg */
+   luaK_reserveregs(fs, fs->nactvar);  /* reserve registers for parameters */
+ }
++static void parlist (LexState *ls) {
++  parlist_ext(ls, ')');
++}
+ 
+ 
+ static void body (LexState *ls, expdesc *e, int ismethod, int line) {
+@@ -997,6 +1000,25 @@
+ }
+ 
+ 
++static void simplebody (LexState *ls, expdesc *e, int line) {
++  /* simplebody ->  parlist `|' expr END */
++  FuncState new_fs;
++  expdesc ebody;
++  int reg;
++  BlockCnt bl;
++  new_fs.f = addprototype(ls);
++  new_fs.f->linedefined = line;
++  open_func(ls, &new_fs, &bl);
++  parlist_ext(ls, '|');
++  checknext(ls, '|');
++  expr(ls, &ebody);
++  reg = luaK_exp2anyreg(&new_fs, &ebody);
++  luaK_ret(&new_fs, reg, 1);
++  new_fs.f->lastlinedefined = ls->linenumber;
++  codeclosure(ls, e);
++  close_func(ls);
++}
++
+ static int explist (LexState *ls, expdesc *v) {
+   /* explist -> expr { ',' expr } */
+   int n = 1;  /* at least one expression */
+@@ -1124,7 +1146,6 @@
+   }
+ }
+ 
+-
+ static void simpleexp (LexState *ls, expdesc *v) {
+   /* simpleexp -> FLT | INT | STRING | NIL | TRUE | FALSE | ... |
+                   constructor | FUNCTION body | suffixedexp */
+@@ -1171,6 +1192,11 @@
+       body(ls, v, 0, ls->linenumber);
+       return;
+     }
++    case '|': {
++      luaX_next(ls);
++      simplebody(ls, v, ls->linenumber);
++      return;
++    }
+     default: {
+       suffixedexp(ls, v);
+       return;

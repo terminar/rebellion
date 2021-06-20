@@ -11,8 +11,9 @@ Makefile
 CMakeFiles/
 cmake_install.cmake
 *.dylib
-rebellion_main
-rebellion_host
-srcnative/_proto-src
-srcnative/lua-libs-test
-releases/
+/rebellion_host
+/rebelliond
+private/
+src-vendor/lua-cjson
+src-vendor/nlohmann-json
+src-vendor/nlohmann-json-custom/json.hpp

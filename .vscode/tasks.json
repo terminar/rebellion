@@ -7,19 +7,16 @@
             "label": "Build",
             "type": "shell",
             "windows": {
-                "command": "scons",
-            },
-            "osx": {
                 "command": "make"
             },
+            "osx": {
+                "command": "ninja"
+            },
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/build"
             },
             "problemMatcher": [],
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
+            "group": "build"
         },
         {
             "label": "Install",
@@ -28,24 +25,22 @@
                 "command": "make install"
             },
             "options": {
-                "cwd": "${workspaceFolder}"
+                "cwd": "${workspaceFolder}/build"
             },
             "problemMatcher": [],
             "group": {
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn": [ "Build" ]
-
+            "dependsOn": [
+                "Build"
+            ]
         },
         {
-            "label": "Build+Run",
+            "label": "Build+Run host",
             "type": "shell",
             "osx": {
-                "command": "${workspaceFolder}/build/bin/rebellion_main 2>&1 && echo 'OK' || echo 'ERROR'"
-            },
-            "windows": {
-                "command": "${workspaceFolder}/build/rebellion/ 2>&1 && echo 'OK' || echo 'ERROR'"
+                "command": "${workspaceFolder}/build/bin/rebellion_host 2>&1 && echo 'OK' || echo 'ERROR'"
             },
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -55,13 +50,15 @@
                 "kind": "build",
                 "isDefault": true
             },
-            "dependsOn": [ "Build" ]
+            "dependsOn": [
+                "Build"
+            ]
         },
         {
-            "label": "Run",
+            "label": "Build+Run rebelliond",
             "type": "shell",
             "osx": {
-                "command": "${workspaceFolder}/build/bin/rebellion_main 2>&1 && echo 'OK' || echo 'ERROR'"
+                "command": "${workspaceFolder}/build/bin/rebelliond 2>&1 && echo 'OK' || echo 'ERROR'"
             },
             "options": {
                 "cwd": "${workspaceFolder}"
@@ -70,7 +67,10 @@
             "group": {
                 "kind": "build",
                 "isDefault": true
-            }
+            },
+            "dependsOn": [
+                "Build"
+            ]
         }
     ]
 }
