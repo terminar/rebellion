@@ -90,7 +90,7 @@ addRpc 'rebellion.sendDataToDisplay' (function(serial, display, data)
         warr = data
     end
 --[[
-    local img = _loadPngImage("skull-480x272.png")
+    local img = _loadPngImage("rebellion-480x272.png")
     for y = 1, height do
         for x=1, width do
             local pixel = img:getPixel(x,y)

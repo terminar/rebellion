@@ -1,11 +1,13 @@
 
-# Rebellion alpha2
+# Rebellion alpha3
 
-**Date:** 2021-06-20
+**Date:** 2022-06-20
 
 **Contact:** Björn Kalkbrenner <terminar@cyberphoria.org>
 
 **Discord:** https://discord.gg/NFdCmjcp4e
+
+**FAQ:** FAQ.md
 
 **Please keep in mind, that this is the second alpha version. 
 It will be instable and slow as hell!**
@@ -53,6 +55,15 @@ LGPLv3 with some closed-source scripts but for a more detailed info see FAQ.md.
 * maybe: high level support via MIDI messages
 * integrated graphics API for devices with displays
 * integrated state machine for handling specific use cases (e.g. pressing keys in order to have command layers, e.g. [SHIFT/GROUP_A], [LOCK] which is automatically remembered)
+
+### What happened the last year (and first) year => 2021-06-20 - 2022-06-20?
+
+* the discord chat now has an interesting amount of awesome people discussing ideas and wishes not only regarding the NI devices but also stuff like "mobile music/mobile devices"
+* prototype/proof of concept of a hardware gateway which can connect NI devices with iPads via Bluetooth Midi and USB Midi
+* first integration of OSC stuff in the rebelliond, connections to Ableton and Bitwig were successful
+* new devices with basic support: Maschine JAM, Maschine Plus, Maschine MK1
+* first evaluations with Traktor devices and proof that the message format is nearly the same - Rebellion can maybe support Traktor S8 or D2 (and other Traktor devices)
+* proof that the Komplete M32 is some sort of different and will need some more evaluation
 
 ## Logging
 
@@ -154,14 +165,10 @@ Discord channel (https://discord.gg/NFdCmjcp4e).
 
 ## Call for developers
 
-I talked to a handful of people about the (a better) integration of the NI 
-devices into
+The first year showed that there is really low interest in (extended) support for NI devices in DAWs like Ableton or Reaper.
+There were some interested users contacting me regarding Bitwig but most of the time, DrivenByMoss was enough as hint.
 
-- Reaper
-- Ableton
-
-If you are a developer and interested in this topic, please contact me!
-
+Still: If you are a developer and interested in this topic, please contact me! But - i will follow my own project goal by now.
 
 ## What can i do with rebellion?
 
@@ -184,7 +191,7 @@ end (last key) of the piano light stripe and just fade away - just rotate
 counter-clockwise to get back the led. On the S88 it should stop somewhere
 (12 keys?) before the end of the piano light stripe.
 
-## Known (critical) bugs in alpha2
+## Known (critical) bugs in alpha3
 
 Sending data to the display may result in a non functional (hanging) main loop 
 or may take a while to proceed. This may happen in the rebelliond testState 6.
@@ -198,10 +205,10 @@ Maybe restarting NIHA/NIHIA is helpful.
 
 | Control | Description  |
 |----------|--------------|
-| DBTN1  | Load skull image into the left display (takes around 6+ seconds the first time) |
+| DBTN1  | Load Rebellion logo image into the left display (takes around 6+ seconds the first time) |
 | DBTN2  | Select left display to draw on |
 | DBTN4  | Clear left display |
-| DBTN5  | Load skull image into the right display (takes around 6+ seconds the first time), additionally draw a small black line onto the image |
+| DBTN5  | Load Rebellion logo image into the right display (takes around 6+ seconds the first time), additionally draw a small black line onto the image |
 | DBTN6  | Select right display to draw on  |
 | DBTN8  | Clear right display |
 | FIXED_VEL | Toggle all leds (white)  |
@@ -221,8 +228,17 @@ Maybe restarting NIHA/NIHIA is helpful.
 On Windows, TDM-GCC (https://jmeubank.github.io/tdm-gcc/) is needed for the 
 golang based rebelliond (uses cgo to link librebellion).
 Select "GCC 10.3.0 x86_64-w64-mingw32" in Visual Studio Code.
+CMake doesn't find CMAKE_AR on my system - if you have the same problem, edit 
+build/CmakeCache.txt and set CMAKE_AR:FILEPATH=... to the value of
+CMAKE_CXX_COMPILER_AR:FILEPATH=...
+
+After building you have to copy the create libraries and binaries to the root folder because Rebellion 
+tries to search the scripts/ folder - which is not available in the created bin/ or lib/ folder.
 
 Currently you shouldn't try to build this if you don't really need to.
+Please, just use the available binary release from github - you don't get any special if you compile it yourself.
+It only shows that you can trust the build if you are paranoid. That's great but then please - if you have
+problems building - try to fix them or report and stay patient ;)
 
 # Special thanks
 

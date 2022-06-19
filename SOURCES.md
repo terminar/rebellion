@@ -11,4 +11,4 @@
 * Penlight
   https://github.com/lunarmodules/Penlight
 
-Skull image: [Deviant Art / scurvycrow ](https://www.deviantart.com/scurvycrow/art/Skull-Wallpaper-117711804)
+Rebellion logo: Björn Kalkbrenner <terminar@cyberphoria.org>

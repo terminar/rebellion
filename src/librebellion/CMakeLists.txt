@@ -72,7 +72,11 @@ add_library(${TARGET} SHARED
 )
 
 set_target_properties(${TARGET} PROPERTIES PREFIX "")
-set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "librebellion")
+if(WIN32)
+    set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "rebellion")
+else()
+    set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "librebellion")
+endif()
 
 target_include_directories(${TARGET} PRIVATE 
     ${rebellion_INCLUDEDIRS}
@@ -89,7 +93,11 @@ add_library(${TARGET} STATIC
 )
 
 set_target_properties(${TARGET} PROPERTIES PREFIX "")
-set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "librebellion")
+if (WIN32)
+    set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "rebellion")
+else()
+    set_target_properties(${TARGET} PROPERTIES OUTPUT_NAME "librebellion")
+endif()
 
 target_include_directories(${TARGET} PRIVATE 
     ${rebellion_INCLUDEDIRS}
