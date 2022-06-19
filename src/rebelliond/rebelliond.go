@@ -7,6 +7,7 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
 	"image"
 	"image/png"
@@ -20,6 +21,7 @@ var rpcResults map[uint64]*RebellionRpcResult = make(map[uint64]*RebellionRpcRes
 var rpcReqCnt uint64 = 0
 var testState uint32 = 0
 var devSerial string
+var reb_cb_ev_chan chan interface{}
 
 func toRGB565(r, g, b uint32) uint16 {
 	// RRRRRGGGGGGBBBBB
@@ -28,8 +30,8 @@ func toRGB565(r, g, b uint32) uint16 {
 		((b & 0xF800) >> 11))
 }
 
-func getSkullImage() image.Image {
-	existingImageFile, err := os.Open("skull-480x272.png")
+func getRebellionImage() image.Image {
+	existingImageFile, err := os.Open("rebellion-480x272.png")
 	if err != nil {
 		panic(err)
 	}
@@ -48,7 +50,12 @@ func RpcCallback(rpc interface{}) int {
 	switch v := rpc.(type) {
 	case *RebellionRpcEvent:
 		ev := rpc.(*RebellionRpcEvent)
+
 		fmt.Println("G> EVENT: ", ev)
+		//reb_cb_ev_chan <- "/message/EV/" + ev.Event
+		reb_cb_ev_chan <- rpc
+		fmt.Println("G> set reb_cb_ev_chan")
+
 		if ev.Event == "device.state" {
 			data := ev.Data.(map[string]interface{})
 			if data["state"] == "ON" {
@@ -95,10 +102,8 @@ func rpcResult(id uint64) *RebellionRpcResult {
 	return nil
 }
 
-func main() {
-
+func rebellionTests() {
 	fmt.Println("-------------------------------")
-	Rebellion(RpcCallback)
 
 	for {
 		switch testState {
@@ -184,37 +189,36 @@ func main() {
 			testState++
 		case 6:
 			if devSerial != "" {
-				fmt.Println(("G> Calling rebellion.sendDataToDisplay (load skull image from png)"))
-				/*
-					const maxX = 480
-					const maxY = 272
-					data := [maxY][maxX]uint16{}
-					col := 0
-					for y := 0; y < maxY; y++ {
-						for x := 0; x < maxX; x++ {
-							var c uint16 = 0
-							switch col {
-							case 0:
-								c = toRGB565(0xffff, 0x0, 0x0)
-							case 1:
-								c = toRGB565(0x0, 0xffff, 0x0)
-							case 2:
-								c = toRGB565(0x0, 0x0, 0xffff)
-							}
+				fmt.Println(("G> Calling rebellion.sendDataToDisplay (load Rebellion logo image from png)"))
 
-							data[y][x] = c
+				// const maxX = 480
+				// const maxY = 272
+				// data := [maxY][maxX]uint16{}
+				// col := 0
+				// for y := 0; y < maxY; y++ {
+				// 	for x := 0; x < maxX; x++ {
+				// 		var c uint16 = 0
+				// 		switch col {
+				// 		case 0:
+				// 			c = toRGB565(0xffff, 0x0, 0x0)
+				// 		case 1:
+				// 			c = toRGB565(0x0, 0xffff, 0x0)
+				// 		case 2:
+				// 			c = toRGB565(0x0, 0x0, 0xffff)
+				// 		}
 
-							if col >= 2 {
-								col = 0
-							} else {
-								col++
-							}
+				// 		data[y][x] = c
 
-						}
-					}
-				*/
+				// 		if col >= 2 {
+				// 			col = 0
+				// 		} else {
+				// 			col++
+				// 		}
 
-				img := getSkullImage()
+				// 	}
+				// }
+
+				img := getRebellionImage()
 				maxX := img.Bounds().Dx()
 				maxY := img.Bounds().Dy()
 				data := make([][]uint16, maxY)
@@ -243,6 +247,47 @@ func main() {
 			testState++
 		}
 
+	}
+
+}
+
+func stdin_reader() {
+
+	fmt.Println("### Welcome to Rebellion OSC server demo")
+	fmt.Println("Press \"q\" to exit")
+	//-- main wait
+	reader := bufio.NewReader(os.Stdin)
+
+	for {
+		c, err := reader.ReadByte()
+		if err != nil {
+			os.Exit(0)
+		}
+
+		if c == 'q' {
+			os.Exit(0)
+		}
+	}
+}
+
+func main() {
+
+	reb_cb_ev_chan = make(chan interface{})
+
+	go stdin_reader()
+	go rebellionOSCD()
+	/*
+		go func() {
+			for {
+				fmt.Println("!!!!! getting reb_cb_ev_chan message")
+				message := <-reb_cb_ev_chan
+				fmt.Printf("!!!!! NEW CB MESSAGE: %s\n", message)
+			}
+		}()
+	*/
+	Rebellion(RpcCallback)
+	for {
 		RebellionLoop(50)
 	}
+
 }

@@ -27,7 +27,7 @@ I wanted to see how much control I can get.
 #### Q: Is there a timeline?
 
 No. I'm doing this completely on my own in my spare time, it is a hobby project.
-I will not promise releaes dates, functionality or something else.
+I will not promise release dates, functionality or something else.
 That may change if there is more interest in the project.
 
 #### Q: What does this ***mapping*** mean that is mentioned in the README?
@@ -42,6 +42,20 @@ vice versa.
 
 Technically it's possible and may make sence regarding the architectural core 
 but currently there is no such plan yet - maybe later.
+
+#### Q: Can i use Rebellion to support my old Maschine MK1 on newer macOS?
+
+No. As described, this project uses NIHA/NIHIA which needs the hardware driver for the Maschine MK1.
+
+Please take a look at https://github.com/shaduzlabs/cabl
+
+(There is a POC of Rebellion on Linux to access the hardware as gateway and some sort of Maschine Plus like thing on steroids but it is a hardware proof of concept and will likely never be released).
+
+#### Q: Can i use Rebellion to attach the NI devices to my iPad?
+
+No. There is a PoC using a cheap, well available microcontroller with a custom firmware as gateway between NI devices and Bluetooth MIDI / USB MIDI but that's just a PoC.
+
+Since the WWDC 2022 announcement that M1 powered devices like the iPad Pro will support DriverKit - it's possible that (if NI doesn't create drivers for the iPad) i will maybe take a look at it and create a driver for it but just an idea yet.
 
 ## Developer questions
 
@@ -73,7 +87,7 @@ The development is currently hosted and done in a private Gitea instance and
 git repository. A public mirror of the releases is available on Github 
 at https://github.com/terminar/rebellion - that may change in the future.
 
-#### Q: Why are some parts (closed) binaries?
+#### Q: Why are some parts (closed) binary scripts?
 
 Legal reasons i have to examine. That may also change in the future.
 
@@ -88,4 +102,4 @@ It's a sandbox playground.
 - scrips: currently closed source distributed as binaries
 - librebellion, host, rebelliond: LGPLv3
 - external Lua libraries used (in scripts folder) are licensed MIT
-- Skull image: [Deviant Art / scurvycrow ](https://www.deviantart.com/scurvycrow/art/Skull-Wallpaper-117711804)
+- Rebellion logo: Björn Kalkbrenner <terminar@cyberphoria.org>

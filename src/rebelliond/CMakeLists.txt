@@ -16,6 +16,7 @@ set(GOPATH ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
 #message(${CMAKE_GO_FLAGS})
 set(rebelliond_SRCS
     ${CMAKE_CURRENT_SOURCE_DIR}/rebelliond.go
+    ${CMAKE_CURRENT_SOURCE_DIR}/oscd.go
     ${CMAKE_CURRENT_SOURCE_DIR}/rebellion_api.go
 )
 

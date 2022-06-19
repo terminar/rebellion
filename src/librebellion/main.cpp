@@ -92,25 +92,25 @@ extern "C"
         {
             auto start = std::chrono::steady_clock::now();
             //DEBf("C> main: luaRun(%i)\n",i);
-            DEBLf(DEB_DEBUG, "C> rebellion_loop run\n");
+            DEBLf(DEB_DEBUG, "C> REBELLION LIB: rebellion_loop run\n");
             luaRun();
 
             //Throttling
             auto end = std::chrono::steady_clock::now();
             auto difTime = end - start;
             auto diff = std::chrono::duration_cast<std::chrono::milliseconds>(difTime).count();
-            DEBLf(DEB_DEBUG, "C> loop runtime: %lld\n", diff);
+            DEBLf(DEB_DEBUG, "C> REBELLION LIB: loop runtime: %lld\n", diff);
             if (diff < waitmax)
             {
-                DEBLf(DEB_DEBUG, "C> loop throttling\n");
+                DEBLf(DEB_DEBUG, "C> REBELLION LIB: loop throttling\n");
                 std::this_thread::sleep_for(std::chrono::milliseconds(waitmax - diff));
             }
             if (llooptime > 0) {
-                DEBLf(DEB_DEBUG, "C> rebellion_loop end\n");
+                DEBLf(DEB_DEBUG, "C> REBELLION LIB: rebellion_loop end\n");
                 llooptime = -1;
             }
         }
-        DEBLf(DEB_DEBUG, "C> leaving rebellion_loop\n");
+        DEBLf(DEB_DEBUG, "C> REBELLION LIB: leaving rebellion_loop\n");
         return 0;
     }
 
@@ -120,7 +120,7 @@ extern "C"
                             const uint8_t *udata, 
                             uint32_t len)
     {
-        DEBLf(DEB_DEBUG, "REBELLION LIB: rpc called\n");
+        DEBLf(DEB_DEBUG, "C> REBELLION LIB: rpc called\n");
         if (udata != NULL && len > 0)
         {
             return luaRpc(mf, mt, udata, len);
@@ -131,27 +131,27 @@ extern "C"
     REBELLION_DECL int rebellion(rebellion_rpc_callback cb)
     {
         if (cb != NULL) { //start
-            DEBLf(DEB_INFO, "REBELLION LIB: rebellion START, starting lua\n");
+            DEBLf(DEB_INFO, "C> REBELLION LIB: rebellion START, starting lua\n");
             DEBLf(DEB_INFO, "C> REBELLION LIB: luaStart()\n");
             luaStart();
 
-            DEBLf(DEB_INFO, "registering callback !\n ");
+            DEBLf(DEB_INFO, "C> REBELLION LIB: registering callback !\n ");
             _rebellion_rpc_callback = cb;
 
             json jsonrpc = {
                 {"event", "rpc.callback.registered"}
             };
             std::string s = jsonrpc.dump();
-            DEBLf(DEB_DEBUG, "REBELLION LIB: rebellion register_cb\n => testing callback, sending '%s'\n", s.c_str());
+            DEBLf(DEB_DEBUG, "C> REBELLION LIB: rebellion register_cb\n => testing callback, sending '%s'\n", s.c_str());
 
             uint8_t *udata = (uint8_t *)s.c_str();
             _rebellion_rpc_callback(REBELLION_MF_JSON, REBELLION_MT_EV, udata, s.length());
         } else { //end
-            DEBLf(DEB_INFO, "REBELLION LIB: rebellion END, stopping lua\n");
+            DEBLf(DEB_INFO, "C> REBELLION LIB: rebellion END, stopping lua\n");
             DEBLf(DEB_INFO, "C> main: luaEnd()\n");
             luaEnd();
 
-            DEBLf(DEB_INFO, "REBELLION LIB: unregistering callback !\n ");
+            DEBLf(DEB_INFO, "C> REBELLION LIB: unregistering callback !\n ");
             _rebellion_rpc_callback = NULL;
         }
         return 1;

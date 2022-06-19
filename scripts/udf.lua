@@ -30,7 +30,7 @@ local _pngImageCache = {}
 local function _loadPngImage(name)
     local img = _pngImageCache[name]
     if not img then
-        img = png("skull-480x272.png")
+        img = png("rebellion-480x272.png")
         _pngImageCache[name] = img
     end
     return img
@@ -353,7 +353,7 @@ local function udf_reset_display(event)
 
     else
         --test: load image
-        local img = _loadPngImage("skull-480x272.png")
+        local img = _loadPngImage("rebellion-480x272.png")
         for y = 1, height do
             for x=1, width do
                 local pixel = img:getPixel(x,y)
