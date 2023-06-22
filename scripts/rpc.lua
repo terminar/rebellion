@@ -1,8 +1,8 @@
 -- Rebellion
 --
 -- File: rpc.lua
--- Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
--- License: closed
+-- Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
+-- License: LGPLv3
 
 local niproto = require 'niproto'
 local log = require 'log'
@@ -199,7 +199,7 @@ local function rpc(mf, mt, data, len)
         return rpcReturn {
             error = {
                 code = -32700,
-                message = "Parse error"
+                message = "Parse error: " .. (res or "<unknown error>")
             }
         }
     end

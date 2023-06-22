@@ -1,8 +1,8 @@
 -- Rebellion
 --
 -- File: niinstance.lua
--- Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
--- License: closed
+-- Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
+-- License: LGPLv3
 
 local niproto = require 'niproto'
 local log = require 'log'

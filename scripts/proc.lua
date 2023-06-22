@@ -1,8 +1,8 @@
 -- Rebellion
 --
 -- File: proc.lua
--- Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
--- License: closed
+-- Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
+-- License: LGPLv3
 
 local stepcnt = 0
 local prevtime = 0

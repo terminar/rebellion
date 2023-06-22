@@ -1,3 +1,9 @@
+-- Rebellion
+--
+-- File: mapping.lua
+-- Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
+-- License: LGPLv3
+
 CONST_DEVICES = importDevices {
     { 0x1500, "MASCHINE_JAM", "MJAM", "Maschine Jam", niproto.CONST_PORT_MAIN },
     { 0x1300, "MASCHINE_STUDIO", "MSTUDIO", "Maschine Studio", niproto.CONST_PORT_MAIN },
@@ -58,6 +64,7 @@ CONST_CONTROLS = {
     { "CONFIRM", "KNOB_4D", --OK? CHOOSE? PRESSED?
         { #CONST_DEVICES.MMK3, 0 },
         { #CONST_DEVICES.KKMK2, 46 },
+        { #CONST_DEVICES.KKM, 33 },
         { #CONST_DEVICES.MJAM, 116 },
     },
     { "UP", "KNOB_4D",
@@ -93,6 +100,7 @@ CONST_CONTROLS = {
         { #CONST_DEVICES.KKMK2, 15, nil, 15 },
         { #CONST_DEVICES.MSTUDIO, 26, nil, 15 },
         { #CONST_DEVICES.MJAM, 105, nil, 15 },
+        { #CONST_DEVICES.KKM, 0, nil, 15 },
     },
     { "NOTES", "BUTTON",
         { #CONST_DEVICES.MMK3, 16, nil, 15 },
@@ -248,10 +256,14 @@ CONST_CONTROLS = {
     { "ARRANGER", "BUTTON",
         { #CONST_DEVICES.MMK3, 57, nil, 15 }
     },
+    { "IDEAS", "BUTTON",
+        { #CONST_DEVICES.KKM, 5, nil, 15 }
+    },
     { "BROWSER", "BUTTON",
         { #CONST_DEVICES.MMK3, 58, nil, 15 },
         { #CONST_DEVICES.KKMK2, 34, nil, 15 },
         { #CONST_DEVICES.MJAM, 94, nil, 15 },
+        { #CONST_DEVICES.KKM, 16, nil, 15 },
     },
     { "CHANNEL", "BUTTON",
         { #CONST_DEVICES.MMK3, 56, nil, 15 }
@@ -270,19 +282,22 @@ CONST_CONTROLS = {
     },
     { "PLUG_IN", "BUTTON",
         { #CONST_DEVICES.MMK3, 53, nil, 15 },
-        { #CONST_DEVICES.KKMK2, 33, nil, 15 }
+        { #CONST_DEVICES.KKMK2, 33, nil, 15 },
+        { #CONST_DEVICES.KKM, 17, nil, 15 }
     },
     { "QUANTIZE", "BUTTON",
         { #CONST_DEVICES.KKMK2, 9, nil, 15 }
     },
     { "SCALE", "BUTTON",
-        { #CONST_DEVICES.KKMK2, 11, nil, 15 }
+        { #CONST_DEVICES.KKMK2, 11, nil, 15 },
+        { #CONST_DEVICES.KKM, 1, nil, 15 }
     },
     { "UNDO", "BUTTON",
         { #CONST_DEVICES.KKMK2, 14, nil, 15 }
     },
     { "ARP", "BUTTON",
-        { #CONST_DEVICES.KKMK2, 10, nil, 15 }
+        { #CONST_DEVICES.KKMK2, 10, nil, 15 },
+        { #CONST_DEVICES.KKM, 2, nil, 15 }
     },
     { "PRESET_UP", "BUTTON",
         { #CONST_DEVICES.KKMK2, 20, nil, 15 }
@@ -494,3 +509,67 @@ for i=1,64 do
 end
 
 CONST_CONTROLS = importControls(CONST_CONTROLS)
+
+--[[
+
+const uint8_t kKompleteKontrolKeyStateLightOff = 0x00;
+const uint8_t kKompleteKontrolButtonLightOff = 0x00;
+
+// We have 16 colors accross the rainbow, with 4 levels of intensity.
+// Additionally there is white (sort of), again with 4 levels of intensity.
+const size_t kKompleteKontrolColorCount = 17;
+const size_t kKompleteKontrolColorIntensityLevelCount = 4;
+
+const uint8_t kKompleteKontrolColorRed = 0x04;
+const uint8_t kKompleteKontrolColorOrange = 0x08;
+const uint8_t kKompleteKontrolColorYellow = 0x10;
+const uint8_t kKompleteKontrolColorGreen = 0x1C;
+const uint8_t kKompleteKontrolColorBlue = 0x2C;
+const uint8_t kKompleteKontrolColorPurple = 0x34;
+const uint8_t kKompleteKontrolColorPink = 0x38;
+const uint8_t kKompleteKontrolColorWhite = 0x44;
+
+const uint8_t kKompleteKontrolColorMask = 0xfc;
+const uint8_t kKompleteKontrolIntensityMask = 0x03;
+
+const uint8_t kKompleteKontrolIntensityLow = 0x00;
+const uint8_t kKompleteKontrolIntensityMedium = 0x01;
+const uint8_t kKompleteKontrolIntensityHigh = 0x02;
+const uint8_t kKompleteKontrolIntensityBright = 0x03;
+
+const uint8_t kKompleteKontrolColorLightBlue = kKompleteKontrolColorBlue | kKompleteKontrolIntensityHigh;
+const uint8_t kKompleteKontrolColorBrightBlue = kKompleteKontrolColorBlue | kKompleteKontrolIntensityBright;
+
+const uint8_t kKompleteKontrolColorLightGreen = kKompleteKontrolColorGreen | kKompleteKontrolIntensityHigh;
+const uint8_t kKompleteKontrolColorBrightGreen = kKompleteKontrolColorGreen | kKompleteKontrolIntensityBright;
+
+const uint8_t kKompleteKontrolColorLightYellow = kKompleteKontrolColorYellow | kKompleteKontrolIntensityHigh;
+
+const uint8_t kKompleteKontrolColorLightOrange = kKompleteKontrolColorOrange | kKompleteKontrolIntensityHigh;
+const uint8_t kKompleteKontrolColorBrightOrange = kKompleteKontrolColorOrange | kKompleteKontrolIntensityBright;
+
+const uint8_t kKompleteKontrolColorLightWhite = kKompleteKontrolColorWhite | kKompleteKontrolIntensityHigh;
+const uint8_t kKompleteKontrolColorBrightWhite = kKompleteKontrolColorWhite | kKompleteKontrolIntensityBright;
+
+   // TODO: This is just a very rough, initial approximation of the actual palette of the S-series controllers.
+    const unsigned char palette[17][3] = {
+        { 0xFF, 0x00, 0x00 },   // 0: red
+        { 0xFF, 0x3F, 0x00 },   // 1:
+        { 0xFF, 0x7F, 0x00 },   // 2: orange
+        { 0xFF, 0xCF, 0x00 },   // 3: orange-yellow
+        { 0xFF, 0xFF, 0x00 },   // 4: yellow
+        { 0x7F, 0xFF, 0x00 },   // 5: green-yellow
+        { 0x00, 0xFF, 0x00 },   // 6: green
+        { 0x00, 0xFF, 0x7F },   // 7:
+        { 0x00, 0xFF, 0xFF },   // 8:
+        { 0x00, 0x7F, 0xFF },   // 9:
+        { 0x00, 0x00, 0xFF },   // 10: blue
+        { 0x3F, 0x00, 0xFF },   // 11:
+        { 0x7F, 0x00, 0xFF },   // 12: purple
+        { 0xFF, 0x00, 0xFF },   // 13: pink
+        { 0xFF, 0x00, 0x7F },   // 14:
+        { 0xFF, 0x00, 0x3F },   // 15:
+        { 0xFF, 0xFF, 0xFF }    // 16: white
+    };
+
+--]]

@@ -1,7 +1,7 @@
 # Rebellion
 #
 # File: CMakeLists.txt
-# Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
+# Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
 # License: LGPLv3
 
 cmake_minimum_required (VERSION 3.13.3)

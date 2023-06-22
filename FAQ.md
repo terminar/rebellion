@@ -45,17 +45,23 @@ but currently there is no such plan yet - maybe later.
 
 #### Q: Can i use Rebellion to support my old Maschine MK1 on newer macOS?
 
-No. As described, this project uses NIHA/NIHIA which needs the hardware driver for the Maschine MK1.
+No. As described, this project uses NIHA/NIHIA which needs the hardware driver for the
+ Maschine MK1.
 
 Please take a look at https://github.com/shaduzlabs/cabl
 
-(There is a POC of Rebellion on Linux to access the hardware as gateway and some sort of Maschine Plus like thing on steroids but it is a hardware proof of concept and will likely never be released).
+(There is a POC of Rebellion on Linux to access the hardware as gateway and some sort of 
+Maschine Plus like thing on steroids but it is a hardware proof of concept and will likely 
+never be released).
 
 #### Q: Can i use Rebellion to attach the NI devices to my iPad?
 
-No. There is a PoC using a cheap, well available microcontroller with a custom firmware as gateway between NI devices and Bluetooth MIDI / USB MIDI but that's just a PoC.
+No. There is a PoC using a cheap, well available microcontroller with a custom firmware as 
+gateway between NI devices and Bluetooth MIDI / USB MIDI but that's just a PoC.
 
-Since the WWDC 2022 announcement that M1 powered devices like the iPad Pro will support DriverKit - it's possible that (if NI doesn't create drivers for the iPad) i will maybe take a look at it and create a driver for it but just an idea yet.
+Since the WWDC 2022 announcement that M1 powered devices like the iPad Pro will support 
+DriverKit - it's possible that (if NI doesn't create drivers for the iPad) i will maybe 
+take a look at it and create a driver for it but just an idea yet.
 
 ## Developer questions
 
@@ -97,6 +103,31 @@ Yes! It's a project moving from "proof of concept/alpha" to a usable
 state. Many things are temporarily implemented to check if it's working and
 a good idea. Some things may change completely in the future.
 It's a sandbox playground.
+
+#### Q: Rebelliond crashes (occasionally) on my macOS system!
+
+Yes! That happens somewhere since a newer golang version i think.
+Currently I can only guess (because it worked previously and nothing was changed on the code):
+
+MacOS is throwing an "urgent I/O condition" (which is SIGURG, described as:
+Urgent condition on socket: high bandwidth data is available.") when new data is waiting
+on the mach ports. SIGURG seems to be defined as signal 16. The macos kernel now sends
+signal 16/SIGURG to the go application. Rebelliond uses 'cgo' to interop with C and the callback
+in librebellion. 
+
+Go now throws an error:
+
+```
+signal 16 received but handler not on signal stack
+fatal error: non-Go code set up signal handler without SA_ONSTACK flag
+```
+
+That can be tracked down to golang's  func sigNotOnStack(sig uint32).
+https://github.com/golang/go/blob/51885c1fa2eff36c421d6669816f971b54b63a33/src/runtime/signal_unix.go#L1045
+
+Something changed how signals are interpreted in go (or something in macOS changed, not sure).
+
+
 #### Q: How is this stuff licensed?
 
 - scrips: currently closed source distributed as binaries

@@ -1,7 +1,7 @@
 // Rebellion
 //
 // File: rebellion.go
-// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
+// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
 // License: LGPLv3
 
 package main
@@ -13,15 +13,19 @@ import (
 	"image/png"
 	"math/rand"
 	"os"
+	"os/signal"
 )
 
 type any = interface{}
+
+var reb_cb_ev_chan chan interface{}
 
 var rpcResults map[uint64]*RebellionRpcResult = make(map[uint64]*RebellionRpcResult)
 var rpcReqCnt uint64 = 0
 var testState uint32 = 0
 var devSerial string
-var reb_cb_ev_chan chan interface{}
+
+//var reb_cb_ev_chan chan interface{}
 
 func toRGB565(r, g, b uint32) uint16 {
 	// RRRRRGGGGGGBBBBB
@@ -53,8 +57,8 @@ func RpcCallback(rpc interface{}) int {
 
 		fmt.Println("G> EVENT: ", ev)
 		//reb_cb_ev_chan <- "/message/EV/" + ev.Event
-		reb_cb_ev_chan <- rpc
-		fmt.Println("G> set reb_cb_ev_chan")
+		//reb_cb_ev_chan <- rpc
+		//fmt.Println("G> set reb_cb_ev_chan")
 
 		if ev.Event == "device.state" {
 			data := ev.Data.(map[string]interface{})
@@ -252,7 +256,6 @@ func rebellionTests() {
 }
 
 func stdin_reader() {
-
 	fmt.Println("### Welcome to Rebellion OSC server demo")
 	fmt.Println("Press \"q\" to exit")
 	//-- main wait
@@ -270,12 +273,38 @@ func stdin_reader() {
 	}
 }
 
+/*
+func init() {
+	//I believe runtime.LockOSThread() is necessary if you are creating a library binding from C code which uses thread-local storage.
+	//Otherwise, just let the scheduler multiplex the goroutines for you.
+	//And note that runtime.LockOSThread() only prevents other goroutines from running in that thread until you
+	//call runtime.UnlockOSThread().
+
+	//https://github.com/golang/go/wiki/LockOSThread
+
+	runtime.LockOSThread()
+
+}
+*/
+
 func main() {
 
-	reb_cb_ev_chan = make(chan interface{})
+	//runtime.GOMAXPROCS(1)
 
-	go stdin_reader()
-	go rebellionOSCD()
+	sigs := make(chan os.Signal, 1)
+	signal.Notify(sigs)
+	//  16    SIGURG   discard signal urgent condition present on socket
+	go func() {
+		for {
+			sig := <-sigs
+			fmt.Println()
+			fmt.Println(sig)
+		}
+	}()
+
+	//reb_cb_ev_chan = make(chan interface{}, 1024)
+
+	//	go rebellionOSCD()
 	/*
 		go func() {
 			for {
@@ -285,9 +314,12 @@ func main() {
 			}
 		}()
 	*/
+
 	Rebellion(RpcCallback)
+	fmt.Println("========> Starting RebellionLoop")
 	for {
-		RebellionLoop(50)
+		RebellionLoop(10)
 	}
 
+	stdin_reader()
 }

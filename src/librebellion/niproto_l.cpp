@@ -1,7 +1,7 @@
 // Rebellion
 //
 // File: niproto_l.cpp
-// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
+// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
 // License: LGPLv3
 
 #include "niproto.hpp"
@@ -91,9 +91,9 @@ static bool run_lua_callback(CTX *ctx, std::unique_ptr<NIIPC::Data> Data)
         argsize = 1;
     }
 
-    printf("C> run_lua_callback pre lua_call\n");
+    printf("C> run_lua_callback pre lua_call >>>>>>>>\n");
     lua_call (ctx->state, argsize, 1);
-    printf("C> run_lua_callback post lua_call\n");
+    printf("C> run_lua_callback post lua_call <<<<<<<<\n");
     return true;
 }
 

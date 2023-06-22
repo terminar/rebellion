@@ -1,7 +1,7 @@
 // Rebellion
 //
 // File: platform.cpp
-// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
+// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
 // License: LGPLv3
 
 #include <windows.h>
@@ -496,17 +496,18 @@ VOID GetAnswerToRequest(LPPIPEINST Pipe, NIIPC *niipc)
 
 	auto vdata = std::make_unique<NIIPC::Data>(Pipe->chRequest, Pipe->chRequest + Pipe->cbRead);
 	if (niipc) {
-		printf("GetAnswerToRequest: calling fireCallback\n");
+		printf("C> GetAnswerToRequest: calling queueCallbackResult\n");
+		niipc->queueCallbackResult(std::move(vdata));
+		/*
 		auto result = niipc->fireCallback(std::move(vdata));
 		if (result != nullptr) {
-			printf("TODO: send return result from fireCallback\n");
-			/*
-			printf("_port_callback: got return result, trying to sent it back via return\n");
+			printf("TODO: send return result from fireCallback - really needed???\n");
+			//printf("_port_callback: got return result, trying to sent it back via return\n");
 			//OK, something was returned - return this to sender
-			CFDataRef res = CFDataCreate(kCFAllocatorDefault, (uint8_t*) result->data(), result->size());
-			return res;
-			*/
+			//CFDataRef res = CFDataCreate(kCFAllocatorDefault, (uint8_t*) result->data(), result->size());
+			//return res;
 		}
+		*/
 	}	
 
 }

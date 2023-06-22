@@ -1,7 +1,7 @@
 // Rebellion
 //
 // File: main.hpp
-// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
+// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
 // License: LGPLv3
 
 #ifndef _MAIN_H_
