@@ -17,3 +17,5 @@ private/
 src-vendor/lua-cjson
 src-vendor/nlohmann-json
 src-vendor/nlohmann-json-custom/json.hpp
+target/
+.files/

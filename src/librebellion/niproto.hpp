@@ -1,7 +1,7 @@
 // Rebellion
 //
 // File: niproto.hpp
-// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
+// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
 // License: LGPLv3
 
 #ifndef _NIPROTO_H_
@@ -15,8 +15,11 @@
 #include <cstddef>
 #include <string>
 #include <vector>
+#include <queue>
 #include <memory>
 #include <functional>
+
+#include <pthread.h>
 
 #ifdef __GNUC__
 #define PACK( __Declaration__ ) __Declaration__ __attribute__((__packed__))
@@ -30,7 +33,7 @@ class NIIPC {
     public:
         typedef std::vector<uint8_t> Data;
 
-        typedef void CallbackData;
+        //typedef void CallbackData;
         typedef std::function<std::unique_ptr<NIIPC::Data> (std::unique_ptr<NIIPC::Data> data)> Callback;
 
         NIIPC(const char *name);
@@ -49,11 +52,15 @@ class NIIPC {
         std::string getName();
         void setCallback(Callback callback);
         bool hasCallback();
-        std::unique_ptr<NIIPC::Data> fireCallback(std::unique_ptr<NIIPC::Data> data);
+        void queueCallbackResult(std::unique_ptr<NIIPC::Data> data);
+        //std::unique_ptr<NIIPC::Data> fireCallback(std::unique_ptr<NIIPC::Data> data);
+        bool fireCallbackIfResultQueued();
 
     private:
         std::string _name;
+        std::queue< std::unique_ptr<NIIPC::Data> > _callbackResultQueue;
         Callback _callback;
+        pthread_mutex_t _cqlock;
 
         //forward declaration for pimpl
         class _NIIPC;

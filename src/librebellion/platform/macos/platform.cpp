@@ -1,7 +1,7 @@
 // Rebellion
 //
 // File: platform.cpp
-// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020,2021
+// Author: (C) Björn Kalkbrenner <terminar@cyberphoria.org> 2020-2023
 // License: LGPLv3
 
 #include "niproto_pimpl.hpp"
@@ -39,7 +39,7 @@ _port_callback(CFMessagePortRef local,
                           CFDataRef data,
                           void *info)
 {
-    printf(">>>>>>>>>>>>>>_port_callback called\n");
+    printf("C> platform::_port_callback called >>>>>>>>>>>>>>\n");
 
     if (data && info) {
         dumpCFData("_port_callback:", data);
@@ -50,18 +50,22 @@ _port_callback(CFMessagePortRef local,
 
         NIIPC *niipc = static_cast<NIIPC*>(info);
         if (niipc) {
-            printf("_port_callback: calling fireCallback\n");
+            printf("C> platform::_port_callback: calling queueCallbackData\n");
+    		niipc->queueCallbackResult(std::move(vdata));
+            /*
             auto result = niipc->fireCallback(std::move(vdata));
             if (result != nullptr) {
-                printf("_port_callback: got return result, trying to sent it back via return\n");
+                //printf("TODO: send return result from fireCallback - really needed???\n");
+                //printf("C> platform::_port_callback: got return result, trying to sent it back via return\n");
                 //OK, something was returned - return this to sender
-                CFDataRef res = CFDataCreate(kCFAllocatorDefault, (uint8_t*) result->data(), result->size());
-                return res;
+                //CFDataRef res = CFDataCreate(kCFAllocatorDefault, (uint8_t*) result->data(), result->size());
+                //return res;
             }
+            */
         }
     }
 
-    printf("_port_callback: Done. Returning NULL\n");
+    printf("C> platform::_port_callback: Done. Returning NULL <<<<<<<<<<<<<<\n");
     return NULL;
 }
 
@@ -77,12 +81,12 @@ sendMsg(CFMessagePortRef port, uint8_t *msg, size_t size)
     //dumpCFData("sendMsg >>>>>:", msgData);
                            
     if (!msgData) {
-        printf("Couldn't create message data\n");
+        printf("C> platform::sendMsg: Couldn't create message data\n");
         return NULL;
     }
 
     if (!port || !CFMessagePortIsValid(port)) {
-        printf("Either null or invalid message port\n");
+        printf("C> platform::sendMsg: Either null or invalid message port\n");
         return NULL;
     }
 

@@ -1,16 +1,17 @@
 
-# Rebellion alpha3
+# Rebellion alpha4
 
-**Date:** 2022-06-20
+**Date:** 2023-06-22
 
 **Contact:** Björn Kalkbrenner <terminar@cyberphoria.org>
 
 **Discord:** https://discord.gg/NFdCmjcp4e
 
-**FAQ:** FAQ.md
+**FAQ:**  👉 FAQ.md 👈
 
-**Please keep in mind, that this is the second alpha version. 
-It will be instable and slow as hell!**
+**Please keep in mind, that this is an alpha version.
+It will be unstable and slow as hell!
+Also - I am working on this project just for fun!**
 
 ## General info
 
@@ -45,8 +46,8 @@ LGPLv3 with some closed-source scripts but for a more detailed info see FAQ.md.
 * available for Windows and MacOS (via platform abstraction layer)
 * core library developed with C++ (src/librebellion)
 * core contains Lua 5.4 as cross platform scripting engine for user defined functions and tests/prototyping
-* Go based daemon as higher level gateway (src/rebelliond) (OSC, MIDI?)
 * C++ based program (src/host) which can be used to display the events and play around a bit the the current user defined test functions (load image, toggle LEDs, ...)
+* There will possibly be a higher level gateway with OSC/MIDI support, some examples how to use it in **your favourite language**
 
 ### Planned
 
@@ -56,7 +57,7 @@ LGPLv3 with some closed-source scripts but for a more detailed info see FAQ.md.
 * integrated graphics API for devices with displays
 * integrated state machine for handling specific use cases (e.g. pressing keys in order to have command layers, e.g. [SHIFT/GROUP_A], [LOCK] which is automatically remembered)
 
-### What happened the last year (and first) year => 2021-06-20 - 2022-06-20?
+### What happened the first year => 2021-06-20 - 2022-06-20?
 
 * the discord chat now has an interesting amount of awesome people discussing ideas and wishes not only regarding the NI devices but also stuff like "mobile music/mobile devices"
 * prototype/proof of concept of a hardware gateway which can connect NI devices with iPads via Bluetooth Midi and USB Midi
@@ -64,6 +65,13 @@ LGPLv3 with some closed-source scripts but for a more detailed info see FAQ.md.
 * new devices with basic support: Maschine JAM, Maschine Plus, Maschine MK1
 * first evaluations with Traktor devices and proof that the message format is nearly the same - Rebellion can maybe support Traktor S8 or D2 (and other Traktor devices)
 * proof that the Komplete M32 is some sort of different and will need some more evaluation
+
+### What happened the last (second) year => 2022-06-20 - 2023-06-22?
+
+* more interested users in the discord but nothing substantial for the project sourcecode ;)
+* added more devices (M32 is generally recognized now but still - basic)
+* some JNI example test was added due to a request on the rebellion discord
+* a Rust example, binding with librebellion
 
 ## Logging
 
@@ -134,7 +142,7 @@ adding your specific device to the file.
 ## Other NI devices? 
 
 There are several other (or older) Native Instruments devices which may also 
-work:
+work but i was not able to get one yet:
 
 * Traktor Kontrol D2
 * Traktor Kontrol F1
@@ -153,22 +161,6 @@ work:
 
 Due to missing hardware that can't be tested yet. If anybody owns such devices 
 please let me now, i'll try to create a special debug version of **Rebellion**.
-## Call for testers
-
-***Testers for other devices appreciated!***
-
-I am currently searching for users who can use **Rebellion** with their 
-(currently unmapped) devices, test some things and send me the logs.
-
-Reach me via email (terminar@cyberphoria.org) or the official 
-Discord channel (https://discord.gg/NFdCmjcp4e).
-
-## Call for developers
-
-The first year showed that there is really low interest in (extended) support for NI devices in DAWs like Ableton or Reaper.
-There were some interested users contacting me regarding Bitwig but most of the time, DrivenByMoss was enough as hint.
-
-Still: If you are a developer and interested in this topic, please contact me! But - i will follow my own project goal by now.
 
 ## What can i do with rebellion?
 
@@ -191,11 +183,16 @@ end (last key) of the piano light stripe and just fade away - just rotate
 counter-clockwise to get back the led. On the S88 it should stop somewhere
 (12 keys?) before the end of the piano light stripe.
 
-## Known (critical) bugs in alpha3
+## Known (critical) bugs in alpha4
 
-Sending data to the display may result in a non functional (hanging) main loop 
-or may take a while to proceed. This may happen in the rebelliond testState 6.
-Maybe restarting NIHA/NIHIA is helpful.
+- Sending data to the display may result in a non functional (hanging) main loop 
+  or may take a while to proceed. This may happen in the rebelliond testState 6.
+  Maybe restarting NIHA/NIHIA is helpful.
+
+- as mentioned - rebelliond is currently unusable
+
+- windows is completely ignored due to the rewrite for the message queue and and 
+  testing with go/signals on macos
 
 ## Keys
 
